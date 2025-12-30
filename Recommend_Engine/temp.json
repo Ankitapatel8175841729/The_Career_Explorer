@@ -1,0 +1,18 @@
+{
+    "careerId": "software_engineer",
+    "stream": "Science_PCM",
+    "subjects": [
+        "Maths",
+        "Physics"
+    ],
+    "skills": [
+        "Problem Solving",
+        "Coding"
+    ],
+    "aptitude": [
+        "Logical"
+    ],
+    "minMarks": 70,
+    "futureScope": 5,
+    "salaryScore": 5
+}
