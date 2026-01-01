@@ -1,39 +1,42 @@
 import React from "react";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
-import ButtonGroup from "react-bootstrap/ButtonGroup";
-import ToggleButton from "react-bootstrap/ToggleButton";
+import { useNavigate } from "react-router";
 
 import { auth } from "../context/Firebase";
+import { useAuth } from "../context/Authentication";
 import { addUserData } from "../DataBase/AddUser";
 import {
   signInWithEmailAndPassword,
   signInWithPopup,
   GoogleAuthProvider,
-  linkWithCredential,
+  getAdditionalUserInfo,
 } from "firebase/auth";
 
 const provider = new GoogleAuthProvider();
 
 const Login = () => {
-  const [name, setName] = React.useState("");
+  const navigate = useNavigate();
+  const { userInfo, loading } = useAuth();
+
+  // Redirect if already logged in
+  React.useEffect(() => {
+    if (!loading && userInfo) {
+      navigate("/");
+    }
+  }, [userInfo, loading, navigate]);
+
   const [email, setEmail] = React.useState("");
-  const [phone, setPhone] = React.useState("");
   const [password, setPassword] = React.useState("");
   const [radioValue, setRadioValue] = React.useState("2");
 
-  const [loading, setLoading] = React.useState(false);
+  const [loadingLogin, setLoadingLogin] = React.useState(false);
   const [error, setError] = React.useState("");
-
-  const radios = [
-    { name: "Admin", value: "1" },
-    { name: "Student", value: "2" },
-  ];
 
   const handleLogin = async (e) => {
     e.preventDefault();
     setError("");
-    setLoading(true);
+    setLoadingLogin(true);
 
     try {
       const userCredential = await signInWithEmailAndPassword(
@@ -46,17 +49,14 @@ const Login = () => {
 
       console.log("Login user:", user);
       console.log("User role:", radioValue === "1" ? "Admin" : "Student");
-      // Reset form
-      setEmail("");
-      setPassword("");
-      setRadioValue("2");
+      // Redirect will happen automatically via useEffect
     } catch (err) {
       const errorCode = err.code;
       const errorMessage = err.message;
       setError(`Error (${errorCode}): ${errorMessage}`);
       console.error("Error registering user:", errorCode, errorMessage);
     } finally {
-      setLoading(false);
+      setLoadingLogin(false);
     }
   };
 
@@ -70,15 +70,22 @@ const Login = () => {
 
         // The signed-in user info.
         const user = result.user;
-        addUserData(user.uid, {
-          displayName: user.displayName,
-          email: user.email,
-          phone: user.phoneNumber,
-          role: radioValue === "1" ? "Admin" : "Student",
-        });
+
+        const additionalInfo = getAdditionalUserInfo(result);
+        // console.log("Is New User:", additionalInfo.isNewUser);
+        if (additionalInfo.isNewUser) {
+          addUserData(user.uid, {
+            displayName: user.displayName,
+            email: user.email,
+            phone: user.phoneNumber,
+            imageUrl: additionalInfo.profile.picture || "",
+            role: radioValue === "1" ? "Admin" : "Student",
+          });
+        }
         console.log("Google Login user:", user);
 
         // IdP data available using getAdditionalUserInfo(result)
+        console.log("Additional User Info:", getAdditionalUserInfo(result));
         // ...
       })
       .catch((error) => {
@@ -96,21 +103,10 @@ const Login = () => {
 
   return (
     <>
-      <div className="container">
+      <div className="container min-vh-100 pt-3">
         <h2 className="mt-4">Login yourself</h2>
         <div className="container">
           <Form onSubmit={handleLogin}>
-            <Form.Group className="mb-3" controlId="formBasicName">
-              <Form.Label>Name</Form.Label>
-              <Form.Control
-                type="text"
-                placeholder="Enter your name"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                required
-              />
-            </Form.Group>
-
             <Form.Group className="mb-3" controlId="formBasicEmail">
               <Form.Label>Email address</Form.Label>
               <Form.Control
@@ -120,23 +116,6 @@ const Login = () => {
                 onChange={(e) => setEmail(e.target.value)}
                 required
               />
-              <Form.Text className="text-muted">
-                We'll never share your email with anyone else.
-              </Form.Text>
-            </Form.Group>
-
-            <Form.Group className="mb-3" controlId="formBasicPhone">
-              <Form.Label>Phone number</Form.Label>
-              <Form.Control
-                type="tel"
-                placeholder="Enter your phone number"
-                value={phone}
-                onChange={(e) => setPhone(e.target.value)}
-                required
-              />
-              <Form.Text className="text-muted">
-                We'll never spam you.
-              </Form.Text>
             </Form.Group>
 
             <Form.Group className="mb-3" controlId="formBasicPassword">
@@ -150,38 +129,23 @@ const Login = () => {
               />
             </Form.Group>
 
-            <h5>Select your role</h5>
-            <ButtonGroup>
-              {radios.map((radio, idx) => (
-                <ToggleButton
-                  key={idx}
-                  id={`radio-${idx}`}
-                  type="radio"
-                  variant={"outline-success"}
-                  name="radio"
-                  value={radio.value}
-                  checked={radioValue === radio.value}
-                  onChange={(e) => setRadioValue(e.currentTarget.value)}
-                >
-                  {radio.name}
-                </ToggleButton>
-              ))}
-            </ButtonGroup>
-
             {error && <div className="alert alert-danger mt-3">{error}</div>}
             <Button
-              variant="primary"
+              variant="dark"
               type="submit"
-              className="m-1"
-              disabled={loading}
+              className="m-1 c1"
+              disabled={loadingLogin}
             >
-              {loading ? "Registering..." : "Submit"}
+              {loadingLogin ? "Logging in..." : "Submit"}
+            </Button>
+            <Button
+              variant="danger"
+              className="m-1"
+              onClick={handleGoogleLogin}
+            >
+              Login with Google
             </Button>
           </Form>
-
-          <Button variant="danger" className="m-1" onClick={handleGoogleLogin}>
-            Login with Google
-          </Button>
         </div>
       </div>
     </>

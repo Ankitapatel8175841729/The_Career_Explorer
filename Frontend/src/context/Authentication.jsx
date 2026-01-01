@@ -1,7 +1,8 @@
 import React from "react";
 import { auth } from "./Firebase";
 import { onAuthStateChanged } from "firebase/auth";
-import { getUserData } from "../DataBase/GetUser";
+
+import getUserData from "../DataBase/GetUser";
 
 const AuthContext = React.createContext();
 

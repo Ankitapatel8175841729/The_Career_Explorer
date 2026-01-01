@@ -2,21 +2,21 @@ import React from "react";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import NavDropdown from "react-bootstrap/NavDropdown";
-
 import { auth } from "../context/Firebase";
 import { onAuthStateChanged, signOut } from "firebase/auth";
+import getUserData from "../DataBase/GetUser.jsx";
 
 function MyNavbar() {
-  const [userInfo, setUserInfo] = React.useState(null);
-
+  const [userData, setUserData] = React.useState(null);
   React.useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
-        // User is signed in, see docs for a list of available properties
-        // https://firebase.google.com/docs/reference/js/auth.user
-        setUserInfo(user);
+        getUserData(user.uid).then((data) => {
+          setUserData(data);
+        });
       } else {
-        setUserInfo(null);
+        setUserData(null);
+        console.log("No user is signed in.");
       }
     });
     return () => unsubscribe();
@@ -41,21 +41,13 @@ function MyNavbar() {
           <Nav.Link href="/login">Login</Nav.Link>
           <Nav.Link href="/register">Register</Nav.Link>
 
-          <NavDropdown title="Others" id="basic-nav-dropdown">
-            <NavDropdown.Item href="#action/3.1">xyz</NavDropdown.Item>
+          <NavDropdown title="Account" id="basic-nav-dropdown">
+            <NavDropdown.Item href="/profile">Profile</NavDropdown.Item>
             <NavDropdown.Divider />
             <NavDropdown.Item onClick={signOutUser}>Logout</NavDropdown.Item>
           </NavDropdown>
         </Nav>
       </Navbar.Collapse>
-      <h5
-        className="text-white"
-        style={{ cursor: "pointer" }}
-        onClick={() => (window.location.href = "/profile")}
-      >
-        <span>{userInfo ? "Welcome, " : ""} </span>
-        <span>{userInfo ? userInfo.displayName : "Login Please"}</span>
-      </h5>
     </Navbar>
   );
 }
