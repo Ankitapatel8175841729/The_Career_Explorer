@@ -18,6 +18,20 @@ export default function CollegeMap() {
                 <Marker key={index} position={[college.lat, college.lng]}>
                     <Popup>
                         <b>{college.name}</b>
+                        <br />
+
+                        {/*Open in map button */}
+                        <button
+                            style={{ marginTop: "8px" }}
+                            onClick={() =>
+                                window.open(
+                                    `https:\\www.openstreetmap.org/?mlat=${college.lat}&mlon=${college.lng}`,
+                                    "_blank"
+                                )
+                            }
+                        >
+                            Open in Map
+                        </button>
                     </Popup>
                 </Marker>
             ))}
