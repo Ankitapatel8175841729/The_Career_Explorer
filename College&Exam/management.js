@@ -3756,4 +3756,4 @@ const management = [
   },
 ];
 
-export default colleges;
+export default management;

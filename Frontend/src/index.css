@@ -32,3 +32,15 @@
   background-color: var(--color-5);
   color: var(--color-1);
 }
+
+.bot {
+  position: fixed;
+  bottom: 0;
+  right: 0;
+}
+@media (max-width: 825px) {
+  .bot {
+    width: 88% !important;
+    position: relative;
+  }
+}

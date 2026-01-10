@@ -602,7 +602,7 @@ const managementRanking = [
   {
     name: "University of Jammu",
     city: "Jammu",
-    rank: 100,
+    rank: 101,
     state: "Jammu and Kashmir",
   },
 ];

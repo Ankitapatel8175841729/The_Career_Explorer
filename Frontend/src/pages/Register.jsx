@@ -4,7 +4,6 @@ import Button from "react-bootstrap/Button";
 import ButtonGroup from "react-bootstrap/ButtonGroup";
 import ToggleButton from "react-bootstrap/ToggleButton";
 import { useNavigate } from "react-router";
-
 import { auth } from "../context/Firebase";
 import { useAuth } from "../context/Authentication";
 import { addUserData } from "../DataBase/AddUser";
@@ -69,9 +68,12 @@ const Register = () => {
 
   return (
     <>
-      <div className="container">
-        <h2 className="mt-4">Register yourself</h2>
-        <div className="container">
+      <div className="container min-vh-100 pt-3">
+        <div
+          className="container c3 p-4 mt-4 border rounded"
+          style={{ maxWidth: "1000px" }}
+        >
+          <h1>Register yourself</h1>
           <Form onSubmit={handleRegister}>
             <Form.Group className="mb-3" controlId="formBasicName">
               <Form.Label>Name</Form.Label>
@@ -152,6 +154,19 @@ const Register = () => {
               {loadingReg ? "Registering..." : "Submit"}
             </Button>
           </Form>
+        </div>
+        <div
+          className="container c3 p-4 mt-4 border rounded"
+          style={{ maxWidth: "1000px" }}
+        >
+          <h2>Already have an account? Login instead</h2>
+          <Button
+            variant="dark"
+            className="m-1 c1"
+            onClick={() => navigate("/login")}
+          >
+            Go to Login
+          </Button>
         </div>
       </div>
     </>

@@ -1,6 +1,7 @@
 import React from "react";
 import { auth } from "../context/Firebase";
 import { onAuthStateChanged } from "firebase/auth";
+import { LuBotMessageSquare, LuExternalLink } from "react-icons/lu";
 
 import DecryptedText from "../components/DecryptedText.jsx";
 import TextType from "../components/TextType.jsx";
@@ -125,6 +126,15 @@ const Home = () => {
             description="Research involves the systematic investigation and study of materials and sources to establish facts and reach new conclusions."
             link="research"
           />
+        </div>
+
+        <div
+          className="m-3 mt-5 p-3 rounded-5 c2 bot"
+          style={{ width: "22%" }}
+          onClick={() => window.open("https://ycounsellor.streamlit.app/")}
+        >
+          <LuBotMessageSquare /> Know more with our AI counsellor{" "}
+          <LuExternalLink />
         </div>
       </div>
     </>

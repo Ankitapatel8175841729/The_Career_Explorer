@@ -104,8 +104,11 @@ const Login = () => {
   return (
     <>
       <div className="container min-vh-100 pt-3">
-        <h2 className="mt-4">Login yourself</h2>
-        <div className="container">
+        <div
+          className="container c3 p-4 mt-4 border rounded"
+          style={{ maxWidth: "500px" }}
+        >
+          <h1 className="text-center">Login yourself</h1>
           <Form onSubmit={handleLogin}>
             <Form.Group className="mb-3" controlId="formBasicEmail">
               <Form.Label>Email address</Form.Label>
@@ -146,6 +149,20 @@ const Login = () => {
               Login with Google
             </Button>
           </Form>
+        </div>
+
+        <div
+          className="container c3 p-4 mt-4 border rounded"
+          style={{ maxWidth: "500px" }}
+        >
+          <h2>New here, Sign up instead</h2>
+          <Button
+            variant="dark"
+            className="m-1 c1"
+            onClick={() => navigate("/register")}
+          >
+            Go to Signup
+          </Button>
         </div>
       </div>
     </>

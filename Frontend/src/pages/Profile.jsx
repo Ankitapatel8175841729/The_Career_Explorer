@@ -9,10 +9,13 @@ import Modal from "react-bootstrap/Modal";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
+import { useNavigate } from "react-router";
 import Image from "react-bootstrap/Image";
 
 const Profile = () => {
-  const [userId, setUserId] = React.useState(null); // Store user data (Auth user)
+  const navigate = useNavigate();
+
+  const [userId, setUserId] = React.useState(null); // Store user data (Auth user) // userId.uid
   const [isAdmin, setAdmin] = React.useState(false);
   const [loading, setLoading] = React.useState(true);
   const [userData, setUserData] = React.useState(null); // Store user data (Firestore data)
@@ -77,47 +80,52 @@ const Profile = () => {
             {loading ? (
               <h5>Loading profile...</h5>
             ) : userData ? (
-              <div>
-                <Container>
-                  <Row>
-                    <Col sm={9}>
-                      <p>
-                        <span className="fw-bold">Role:</span> {userData.role}
-                      </p>
-                      <p>
-                        <span className="fw-bold">Name:</span>{" "}
-                        {userData.displayName}
-                      </p>
-                      <p>
-                        <span className="fw-bold">Phone:</span> {userData.phone}
-                      </p>
-                      <p>
-                        <span className="fw-bold">Email:</span> {userData.email}
-                      </p>
-                      <p>
-                        <span className="fw-bold">User ID:</span> {userId.uid}
-                      </p>
-                    </Col>
+              <Container>
+                <Row>
+                  <Col sm={9}>
+                    <p>
+                      <span className="fw-bold">Role: </span>
+                      {userData.role}
+                    </p>
+                    <p>
+                      <span className="fw-bold">Name: </span>
+                      {userData.displayName}
+                    </p>
+                    <p>
+                      <span className="fw-bold">Phone: </span>
+                      {userData.phone}
+                    </p>
+                    <p>
+                      <span className="fw-bold">Email: </span>
+                      {userData.email}
+                    </p>
+                    <p>
+                      <span className="fw-bold">User ID: </span>
+                      {userId.uid}
+                    </p>
+                  </Col>
 
-                    <Col sm={3} className="m-auto">
-                      <div className="d-flex justify-content-center align-items-center py-3">
-                        <Image
-                          src={userData.imageUrl}
-                          fluid
-                          className="border rounded-3 overflow-hidden"
-                          style={{ width: "150px", height: "150px" }}
-                        />
-                      </div>
-                    </Col>
-                  </Row>
-                </Container>
-              </div>
+                  <Col sm={3} className="m-auto">
+                    <div className="d-flex justify-content-center align-items-center py-3">
+                      <Image
+                        fluid
+                        src={userData.imageUrl}
+                        alt="profile-picture"
+                        className="border rounded-3 overflow-hidden"
+                        style={{ width: "150px", height: "150px" }}
+                      />
+                    </div>
+                  </Col>
+                </Row>
+              </Container>
             ) : (
               <p>Please log in to view your profile.</p>
             )}
           </div>
 
-          {userData ? (
+          {loading ? (
+            <></>
+          ) : userData ? (
             <>
               <Button variant="dark" onClick={handleShow}>
                 Update Profile
@@ -171,7 +179,33 @@ const Profile = () => {
               </Modal>
             </>
           ) : (
-            <></>
+            <>
+              <Container className="container-sm c2 p-3 my-3 border rounded-3">
+                <Row>
+                  <Col sm={5} className="p-3">
+                    <h3>New here, Sign up instead</h3>
+                    <Button
+                      variant="dark"
+                      className="m-1 c1"
+                      onClick={() => navigate("/register")}
+                    >
+                      Go to Signup
+                    </Button>
+                  </Col>
+
+                  <Col sm={7} className="p-3">
+                    <h3>Already have an account? Login instead</h3>
+                    <Button
+                      variant="dark"
+                      className="m-1 c1"
+                      onClick={() => navigate("/login")}
+                    >
+                      Go to Login
+                    </Button>
+                  </Col>
+                </Row>
+              </Container>
+            </>
           )}
         </div>
       </div>
