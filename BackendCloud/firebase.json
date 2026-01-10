@@ -1,0 +1,46 @@
+{
+    "functions": {
+        "source": "functions"
+    },
+    "hosting": {
+        "public": "public",
+        "ignore": [
+            "firebase.json",
+            "**/.*",
+            "**/node_modules/**"
+        ],
+        "rewrites": [
+            {
+                "source": "/getRecommendations",
+                "function": "getRecommendations"
+            },
+            {
+                "source": "/submitQuiz",
+                "function": "submitQuiz"
+            },
+            {
+                "source": "/getCareers",
+                "function": "getCareers"
+            },
+            {
+                "source": "/addCareer",
+                "function": "addCareer"
+            },
+            {
+                "source": "/analytics",
+                "function": "analytics"
+            }
+        ]
+    },
+    "emulators": {
+        "functions": {
+            "port": 5001
+        },
+        "hosting": {
+            "port": 5000
+        },
+        "ui": {
+            "enabled": true
+        }
+    }
+}
