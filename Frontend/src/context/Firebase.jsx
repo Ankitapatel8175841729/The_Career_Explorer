@@ -10,10 +10,13 @@ const firebaseConfig = {
   messagingSenderId: "723154650554",
   appId: "1:723154650554:web:839332171a5538351f0983",
   measurementId: "G-T6V4EFT4FG",
+
+  databaseURL: "https://the-career-explorer-default-rtdb.firebaseio.com",
 };
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
+
 const db = getFirestore(app);
 
 export { app, auth, db };

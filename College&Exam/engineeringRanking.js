@@ -752,7 +752,7 @@ const engineeringRanking = [
   {
     name: "Shoolini University of Biotechnology and Management Sciences",
     city: "Solan",
-    rank: 125,
+    rank: 126,
     state: "Himachal Pradesh",
   },
   {

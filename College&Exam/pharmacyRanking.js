@@ -602,7 +602,7 @@ const pharmacyRanking = [
   {
     name: "Shree Guru Gobind Singh Tricentenary University",
     city: "Gurgaon",
-    rank: 100,
+    rank: 101,
     state: "Haryana",
   },
 ];

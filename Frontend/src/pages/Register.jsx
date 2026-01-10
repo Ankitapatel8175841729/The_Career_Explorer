@@ -3,19 +3,30 @@ import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import ButtonGroup from "react-bootstrap/ButtonGroup";
 import ToggleButton from "react-bootstrap/ToggleButton";
-
+import { useNavigate } from "react-router";
 import { auth } from "../context/Firebase";
+import { useAuth } from "../context/Authentication";
 import { addUserData } from "../DataBase/AddUser";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 
 const Register = () => {
+  const navigate = useNavigate();
+  const { userInfo, loading } = useAuth();
+
+  // Redirect if already logged in
+  React.useEffect(() => {
+    if (!loading && userInfo) {
+      navigate("/");
+    }
+  }, [userInfo, loading, navigate]);
+
   const [name, setName] = React.useState("");
   const [email, setEmail] = React.useState("");
   const [phone, setPhone] = React.useState("");
   const [password, setPassword] = React.useState("");
   const [radioValue, setRadioValue] = React.useState("2");
 
-  const [loading, setLoading] = React.useState(false);
+  const [loadingReg, setLoadingReg] = React.useState(false);
   const [error, setError] = React.useState("");
 
   const radios = [
@@ -26,7 +37,7 @@ const Register = () => {
   const handleRegister = async (e) => {
     e.preventDefault();
     setError("");
-    setLoading(true);
+    setLoadingReg(true);
 
     try {
       const userCredential = await createUserWithEmailAndPassword(
@@ -44,25 +55,25 @@ const Register = () => {
 
       console.log("Registered user:", user);
       console.log("User role:", radioValue === "1" ? "Admin" : "Student");
-      // Reset form
-      setEmail("");
-      setPassword("");
-      setRadioValue("2");
+      // Redirect will happen automatically via useEffect
     } catch (err) {
       const errorCode = err.code;
       const errorMessage = err.message;
       setError(`Error (${errorCode}): ${errorMessage}`);
       console.error("Error registering user:", errorCode, errorMessage);
     } finally {
-      setLoading(false);
+      setLoadingReg(false);
     }
   };
 
   return (
     <>
-      <div className="container">
-        <h2 className="mt-4">Register yourself</h2>
-        <div className="container">
+      <div className="container min-vh-100 pt-3">
+        <div
+          className="container c3 p-4 mt-4 border rounded"
+          style={{ maxWidth: "1000px" }}
+        >
+          <h1>Register yourself</h1>
           <Form onSubmit={handleRegister}>
             <Form.Group className="mb-3" controlId="formBasicName">
               <Form.Label>Name</Form.Label>
@@ -120,8 +131,9 @@ const Register = () => {
                 <ToggleButton
                   key={idx}
                   id={`radio-${idx}`}
+                  className="c5"
                   type="radio"
-                  variant={"outline-success"}
+                  variant={"outline-dark"}
                   name="radio"
                   value={radio.value}
                   checked={radioValue === radio.value}
@@ -134,14 +146,27 @@ const Register = () => {
 
             {error && <div className="alert alert-danger mt-3">{error}</div>}
             <Button
-              variant="primary"
+              variant="success"
               type="submit"
-              className="m-1"
-              disabled={loading}
+              className="m-1 c1"
+              disabled={loadingReg}
             >
-              {loading ? "Registering..." : "Submit"}
+              {loadingReg ? "Registering..." : "Submit"}
             </Button>
           </Form>
+        </div>
+        <div
+          className="container c3 p-4 mt-4 border rounded"
+          style={{ maxWidth: "1000px" }}
+        >
+          <h2>Already have an account? Login instead</h2>
+          <Button
+            variant="dark"
+            className="m-1 c1"
+            onClick={() => navigate("/login")}
+          >
+            Go to Login
+          </Button>
         </div>
       </div>
     </>
